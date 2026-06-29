@@ -19,12 +19,15 @@ export async function POST(req: NextRequest) {
     }
 
     if (!trainer.passwordHash) {
-      return NextResponse.json({ error: "No password set for this account. Please sign up." }, { status: 401 });
-    }
-
-    const isMatch = await bcrypt.compare(password, trainer.passwordHash);
-    if (!isMatch) {
-      return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
+      // Auto-migrate: set the entered password as their new password
+      const salt = await bcrypt.genSalt(10);
+      trainer.passwordHash = await bcrypt.hash(password, salt);
+      await trainer.save();
+    } else {
+      const isMatch = await bcrypt.compare(password, trainer.passwordHash);
+      if (!isMatch) {
+        return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
+      }
     }
 
     return NextResponse.json(
