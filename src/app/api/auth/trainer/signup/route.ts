@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
           name: newTrainer.fullName,
           email: newTrainer.email,
           type: "trainer",
-          onboardingComplete: false,
+          onboardingComplete: true,
           profileComplete: false,
         },
       },
