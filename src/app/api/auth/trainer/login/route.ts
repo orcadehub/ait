@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/db";
-import { Vendor } from "@/models/Vendor";
+import { Trainer } from "@/models/Trainer";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
@@ -13,12 +13,16 @@ export async function POST(req: NextRequest) {
 
     await connectToDatabase();
 
-    const vendor = await Vendor.findOne({ email });
-    if (!vendor) {
+    const trainer = await Trainer.findOne({ email });
+    if (!trainer) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
-    const isMatch = await bcrypt.compare(password, vendor.passwordHash);
+    if (!trainer.passwordHash) {
+      return NextResponse.json({ error: "No password set for this account. Please sign up." }, { status: 401 });
+    }
+
+    const isMatch = await bcrypt.compare(password, trainer.passwordHash);
     if (!isMatch) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
@@ -27,11 +31,11 @@ export async function POST(req: NextRequest) {
       {
         message: "Login successful",
         user: {
-          name: vendor.companyName,
-          email: vendor.email,
-          type: "vendor",
-          onboardingComplete: vendor.profileComplete,
-          profileComplete: vendor.profileComplete,
+          name: trainer.fullName,
+          email: trainer.email,
+          type: "trainer",
+          onboardingComplete: true,
+          profileComplete: trainer.profileComplete,
         },
       },
       { status: 200 }

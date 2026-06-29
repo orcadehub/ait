@@ -88,13 +88,22 @@ export default function TrainerSignup() {
       if (!res.ok) {
         setError(data.error || "Verification failed");
       } else {
-        // Sign up success - Log them in
-        login({
-          name: fullName,
-          email,
-          type: "trainer",
-          onboardingComplete: false
+        // Create the trainer in the database
+        const signupRes = await fetch("/api/auth/trainer/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fullName, email, phone, password }),
         });
+        
+        const signupData = await signupRes.json();
+        
+        if (!signupRes.ok) {
+          setError(signupData.error || "Failed to create trainer account.");
+          return;
+        }
+
+        // Sign up success - Log them in
+        login(signupData.user);
         router.push("/dashboard/trainer");
       }
     } catch {

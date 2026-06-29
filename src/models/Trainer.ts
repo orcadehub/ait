@@ -6,6 +6,7 @@ export interface ITrainer extends Document {
   phone: string;
   isVerified: boolean;
   profileComplete: boolean;
+  passwordHash?: string;
   experience?: number;
   education?: string;
   bio?: string;
@@ -17,6 +18,7 @@ const TrainerSchema = new Schema<ITrainer>({
   fullName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
+  passwordHash: { type: String },
   isVerified: { type: Boolean, default: false },
   profileComplete: { type: Boolean, default: false },
   experience: { type: Number },

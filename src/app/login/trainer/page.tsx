@@ -10,27 +10,41 @@ import { PasswordInput } from "@/components/password-input";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
+import { toast } from "react-hot-toast";
 
 export default function TrainerLogin() {
   const router = useRouter();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // Mock login for now: assume they have completed onboarding
-      login({
-        name: "Trainer",
-        email,
-        type: "trainer",
-        onboardingComplete: true
+    
+    try {
+      const res = await fetch("/api/auth/trainer/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        toast.error(data.error || "Login failed");
+        setIsLoading(false);
+        return;
+      }
+      
+      toast.success("Successfully logged in!");
+      login(data.user);
       router.push("/dashboard/trainer");
-    }, 1000);
+    } catch (error) {
+      toast.error("An error occurred during login.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -57,11 +71,17 @@ export default function TrainerLogin() {
             </div>
             <div className="space-y-2 mb-4">
               <Label htmlFor="password">Password</Label>
-              <PasswordInput id="password" placeholder="Enter your password" />
+              <PasswordInput 
+                id="password" 
+                placeholder="Enter your password" 
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4 mt-2 pb-8">
-            <Button type="submit" className="w-full h-12 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-base rounded-xl shadow-lg shadow-orange-200 cursor-pointer" disabled={isLoading}>
+            <Button type="submit" className="w-full h-12 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-base rounded-xl shadow-lg shadow-orange-200 cursor-pointer animate-in fade-in duration-300" disabled={isLoading}>
               {isLoading ? "Signing in..." : "Login"}
             </Button>
             <div className="text-center text-sm text-slate-500">
