@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, Loader2, Search, Calendar, Users, IndianRupee, Clock, MapPin, Laptop, CalendarDays, Filter, X } from "lucide-react";
+import { FileText, Loader2, Search, Calendar, Users, IndianRupee, Clock, MapPin, Laptop, CalendarDays, Filter, X, Briefcase } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { RouteGuard, useAuth } from "@/context/auth-context";
@@ -37,6 +37,13 @@ interface Requirement {
   vendorWebsite?: string;
   vendorLocation?: string;
   vendorPhone?: string;
+  vendorRegistrationStatus?: string;
+  vendorIndustry?: string;
+  vendorState?: string;
+  vendorCity?: string;
+  vendorWhatsapp?: string;
+  vendorEmail?: string;
+  vendorAltEmail?: string;
   interestedTrainers?: string[];
   shortlistedTrainers?: string[];
 }
@@ -441,11 +448,39 @@ export default function RequirementsPage() {
 
                 <div className="border-t-2 border-dashed border-slate-200 pt-10">
                   <h3 className="text-2xl font-black text-slate-800 uppercase tracking-widest font-sans mb-6">{selectedReq.companyName || 'CONFIDENTIAL'}</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-medium text-slate-600 bg-slate-100/50 p-6 rounded-2xl">
-                    {selectedReq.vendorAbout && <div className="col-span-full mb-2"><p className="text-slate-500 leading-relaxed italic">{selectedReq.vendorAbout}</p></div>}
-                    {selectedReq.vendorWebsite && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Website</span><a href={selectedReq.vendorWebsite.startsWith('http') ? selectedReq.vendorWebsite : `https://${selectedReq.vendorWebsite}`} target="_blank" rel="noreferrer" className="text-blue-600 font-bold hover:underline">{selectedReq.vendorWebsite}</a></div>}
-                    {selectedReq.vendorLocation && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Headquarters</span><span className="text-slate-700 font-bold">{selectedReq.vendorLocation}</span></div>}
-                    {selectedReq.vendorPhone && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Contact Phone</span><span className="text-slate-700 font-bold">{selectedReq.vendorPhone}</span></div>}
+                  
+                  <div className="space-y-6">
+                    {/* Basic Company Info */}
+                    <div className="bg-slate-100/50 p-6 rounded-2xl">
+                      <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><Briefcase className="w-4 h-4 text-blue-500" /> Basic Company Info</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-medium text-slate-600">
+                        {selectedReq.vendorAbout && <div className="col-span-full"><p className="text-slate-500 leading-relaxed italic">{selectedReq.vendorAbout}</p></div>}
+                        {selectedReq.vendorRegistrationStatus && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Registration</span><span className="text-slate-700 font-bold">{selectedReq.vendorRegistrationStatus}</span></div>}
+                        {selectedReq.vendorIndustry && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Industry</span><span className="text-slate-700 font-bold">{selectedReq.vendorIndustry}</span></div>}
+                        {selectedReq.vendorWebsite && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Website</span><a href={selectedReq.vendorWebsite.startsWith('http') ? selectedReq.vendorWebsite : `https://${selectedReq.vendorWebsite}`} target="_blank" rel="noreferrer" className="text-blue-600 font-bold hover:underline">{selectedReq.vendorWebsite}</a></div>}
+                      </div>
+                    </div>
+
+                    {/* Key Contacts */}
+                    <div className="bg-slate-100/50 p-6 rounded-2xl">
+                      <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><Users className="w-4 h-4 text-purple-500" /> Key Contacts</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-medium text-slate-600">
+                        {selectedReq.vendorEmail && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Primary Email</span><span className="text-slate-700 font-bold">{selectedReq.vendorEmail}</span></div>}
+                        {selectedReq.vendorAltEmail && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Alternate Email</span><span className="text-slate-700 font-bold">{selectedReq.vendorAltEmail}</span></div>}
+                        {selectedReq.vendorPhone && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Contact Phone</span><span className="text-slate-700 font-bold">{selectedReq.vendorPhone}</span></div>}
+                        {selectedReq.vendorWhatsapp && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">WhatsApp</span><span className="text-slate-700 font-bold">{selectedReq.vendorWhatsapp}</span></div>}
+                      </div>
+                    </div>
+
+                    {/* Location */}
+                    <div className="bg-slate-100/50 p-6 rounded-2xl">
+                      <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><MapPin className="w-4 h-4 text-rose-500" /> Location Details</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-medium text-slate-600">
+                        {selectedReq.vendorLocation && <div className="col-span-full"><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Headquarters</span><span className="text-slate-700 font-bold">{selectedReq.vendorLocation}</span></div>}
+                        {selectedReq.vendorCity && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">City</span><span className="text-slate-700 font-bold">{selectedReq.vendorCity}</span></div>}
+                        {selectedReq.vendorState && <div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">State</span><span className="text-slate-700 font-bold">{selectedReq.vendorState}</span></div>}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

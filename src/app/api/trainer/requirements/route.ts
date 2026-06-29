@@ -22,7 +22,14 @@ export async function GET(req: NextRequest) {
           vendorAbout: "$vendorDetails.about",
           vendorWebsite: "$vendorDetails.websiteUrl",
           vendorPhone: "$vendorDetails.phone",
-          vendorLocation: "$vendorDetails.location"
+          vendorLocation: "$vendorDetails.location",
+          vendorRegistrationStatus: "$vendorDetails.registrationStatus",
+          vendorIndustry: "$vendorDetails.industry",
+          vendorState: "$vendorDetails.state",
+          vendorCity: "$vendorDetails.city",
+          vendorWhatsapp: "$vendorDetails.whatsapp",
+          vendorEmail: "$vendorDetails.email",
+          vendorAltEmail: "$vendorDetails.altEmail"
         }
       },
       { $project: { vendorDetails: 0 } },
