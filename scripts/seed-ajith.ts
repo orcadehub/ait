@@ -16,7 +16,7 @@ async function seed() {
     await mongoose.connect(MONGODB_URI!);
     console.log("Connected to MongoDB.");
 
-    const email = "ajithkumargurram@gmail.com";
+    const email = "gurramajithkumar70930@gmail.com";
     
     // 1. Find or Create Trainer
     let trainer = await Trainer.findOne({ email });
@@ -30,7 +30,12 @@ async function seed() {
       });
       console.log("Created new Trainer record.");
     } else {
-      console.log("Found existing Trainer record.");
+      trainer.fullName = "GURRAM AJITH KUMAR";
+      trainer.phone = "+91 7093012101";
+      trainer.isVerified = true;
+      trainer.profileComplete = true;
+      await trainer.save();
+      console.log("Updated existing Trainer record to complete profile.");
     }
 
     // 2. Create Profile Data
@@ -44,7 +49,7 @@ async function seed() {
       phone: "+91 7093012101",
       whatsapp: "+91 7093012101",
       email: email,
-      altEmail: "",
+      altEmail: "ajithkumargurram@gmail.com",
       country: "India",
       state: "Andhra Pradesh",
       city: "Anantapur",
