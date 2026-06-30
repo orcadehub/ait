@@ -14,6 +14,7 @@ interface Trainer {
   email: string;
   phone: string;
   isBlocked: boolean;
+  completionPercentage?: number;
 }
 
 export default function ManageTrainers() {
@@ -96,6 +97,7 @@ export default function ManageTrainers() {
                         <th className="p-4">Name</th>
                         <th className="p-4">Email</th>
                         <th className="p-4">Phone</th>
+                        <th className="p-4">Profile Progress</th>
                         <th className="p-4">Status</th>
                         <th className="p-4 text-right">Actions</th>
                       </tr>
@@ -106,6 +108,9 @@ export default function ManageTrainers() {
                           <td className="p-4 font-semibold text-slate-800">{trainer.fullName}</td>
                           <td className="p-4">{trainer.email}</td>
                           <td className="p-4">{trainer.phone || "N/A"}</td>
+                          <td className="p-4 font-bold text-blue-600">
+                            {trainer.completionPercentage !== undefined ? `${trainer.completionPercentage}%` : "0%"}
+                          </td>
                           <td className="p-4">
                             {trainer.isBlocked ? (
                               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
