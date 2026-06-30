@@ -187,10 +187,30 @@ export async function sendOTPEmail(to: string, otp: string, name: string) {
 </html>
   `;
 
-  await transporter.sendMail({
-    from: `"All India Trainings" <${process.env.EMAIL_USER}>`,
-    to,
-    subject: `${otp} — Your All India Trainings Verification Code`,
-    html,
-  });
+  try {
+    await transporter.sendMail({
+      from: `"All India Trainings" <${process.env.EMAIL_USER}>`,
+      to,
+      subject: `${otp} — Your All India Trainings Verification Code`,
+      html,
+    });
+  } catch (error) {
+    console.warn("Primary email transporter failed, trying fallback transporter (support@orcadehub.com):", error);
+    const fallbackTransporter = nodemailer.createTransport({
+      host: 'smtp.zoho.in',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'support@orcadehub.com',
+        pass: 'LU7gEMDB8gnQ',
+      },
+    });
+
+    await fallbackTransporter.sendMail({
+      from: `"All India Trainings" <support@orcadehub.com>`,
+      to,
+      subject: `${otp} — Your All India Trainings Verification Code`,
+      html,
+    });
+  }
 }
