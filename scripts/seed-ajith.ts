@@ -59,14 +59,14 @@ async function seed() {
         year: "2021"
       },
       colleges: [
-        { name: "Vignan University", place: "Guntur", start: "", end: "" },
-        { name: "Mohan Babu University", place: "Tirupati", start: "", end: "" },
-        { name: "MallaReddy University", place: "Hyderabad", start: "", end: "" },
-        { name: "CV Raman Global University", place: "Odisha", start: "", end: "" },
-        { name: "NIET", place: "Greater Noida", start: "", end: "" },
+        { name: "Vignan University", place: "Guntur", start: "2024-01-10", end: "2024-03-15" },
+        { name: "Mohan Babu University", place: "Tirupati", start: "2024-04-05", end: "2024-05-20" },
+        { name: "MallaReddy University", place: "Hyderabad", start: "2024-07-12", end: "2024-09-18" },
+        { name: "CV Raman Global University", place: "Odisha", start: "2024-10-01", end: "2024-11-15" },
+        { name: "NIET", place: "Greater Noida", start: "2025-01-15", end: "2025-03-20" },
       ],
       skills: [
-        "C", "C++", "JAVA", "PYTHON", "DJANGO", "DSA", "MONGODB", "EXPRESS.JS", "REACT.JS", "NODE.JS", "HTML", "CSS", "JAVASCRIPT", "REDUX", "GIT", "GITHUB"
+        "C", "C++", "Java", "Python", "Django", "Data Structures & Algorithms (DSA)", "MERN Stack (MongoDB, Express.js, React.js, Node.js)", "HTML", "CSS", "JavaScript", "Redux", "Git & GitHub"
       ],
       experiences: [],
       completionPercentage: 100
