@@ -21,6 +21,7 @@ const TrainerSchema = new Schema<ITrainer>({
   passwordHash: { type: String },
   isVerified: { type: Boolean, default: false },
   profileComplete: { type: Boolean, default: false },
+  isBlocked: { type: Boolean, default: false },
   experience: { type: Number },
   education: { type: String },
   bio: { type: String },

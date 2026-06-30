@@ -33,6 +33,7 @@ const VendorSchema = new Schema<IVendor>({
   whatsapp: { type: String },
   altEmail: { type: String },
   profileComplete: { type: Boolean, default: false },
+  isBlocked: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
 });
 

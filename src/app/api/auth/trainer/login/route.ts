@@ -18,6 +18,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
+    if (trainer.isBlocked) {
+      return NextResponse.json({ error: "Your account has been blocked by the administrator." }, { status: 403 });
+    }
+
     if (!trainer.passwordHash) {
       // Auto-migrate: set the entered password as their new password
       const salt = await bcrypt.genSalt(10);
