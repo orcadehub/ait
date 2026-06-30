@@ -1,14 +1,61 @@
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT),
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+interface SMTPConfig {
+  host: string;
+  port: number;
+  secure: boolean;
+  user: string;
+  pass: string;
+  fromName: string;
+}
+
+const getSMTPConfigs = (): SMTPConfig[] => {
+  const list: SMTPConfig[] = [];
+  
+  // 1. Primary from environment variables
+  if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    list.push({
+      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port: Number(process.env.EMAIL_PORT) || 587,
+      secure: process.env.EMAIL_PORT === '465',
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+      fromName: 'All India Trainings'
+    });
+  }
+
+  // 2. Fallback support@orcadehub.com
+  list.push({
+    host: 'smtp.zoho.in',
+    port: 465,
+    secure: true,
+    user: 'support@orcadehub.com',
+    pass: 'LU7gEMDB8gnQ',
+    fromName: 'All India Trainings'
+  });
+
+  // 3. Fallback orcadehub2@gmail.com
+  list.push({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    user: 'orcadehub2@gmail.com',
+    pass: 'yhaj rdqd ipym jhbk',
+    fromName: 'All India Trainings'
+  });
+
+  // 4. Fallback gurramajithkumar70930@gmail.com
+  list.push({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    user: 'gurramajithkumar70930@gmail.com',
+    pass: 'ugwk azef bqhz tnuh',
+    fromName: 'All India Trainings'
+  });
+
+  return list;
+};
 
 export function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -187,30 +234,37 @@ export async function sendOTPEmail(to: string, otp: string, name: string) {
 </html>
   `;
 
-  try {
-    await transporter.sendMail({
-      from: `"All India Trainings" <${process.env.EMAIL_USER}>`,
-      to,
-      subject: `${otp} — Your All India Trainings Verification Code`,
-      html,
-    });
-  } catch (error) {
-    console.warn("Primary email transporter failed, trying fallback transporter (support@orcadehub.com):", error);
-    const fallbackTransporter = nodemailer.createTransport({
-      host: 'smtp.zoho.in',
-      port: 465,
-      secure: true,
-      auth: {
-        user: 'support@orcadehub.com',
-        pass: 'LU7gEMDB8gnQ',
-      },
-    });
+  const configs = getSMTPConfigs();
+  let lastError: any = null;
 
-    await fallbackTransporter.sendMail({
-      from: `"All India Trainings" <support@orcadehub.com>`,
-      to,
-      subject: `${otp} — Your All India Trainings Verification Code`,
-      html,
-    });
+  for (const config of configs) {
+    try {
+      console.log(`Attempting to send OTP email via SMTP user: ${config.user}...`);
+      const currentTransporter = nodemailer.createTransport({
+        host: config.host,
+        port: config.port,
+        secure: config.secure,
+        auth: {
+          user: config.user,
+          pass: config.pass,
+        },
+      });
+
+      await currentTransporter.sendMail({
+        from: `"${config.fromName}" <${config.user}>`,
+        to,
+        subject: `${otp} — Your All India Trainings Verification Code`,
+        html,
+      });
+
+      console.log(`OTP email sent successfully via SMTP user: ${config.user}`);
+      return; // Success! Exit early.
+    } catch (error) {
+      console.error(`Failed to send email via SMTP user: ${config.user}. Error:`, error);
+      lastError = error;
+    }
   }
+
+  // If all failed, throw the last error
+  throw new Error(`All SMTP senders failed to send OTP email. Last error: ${lastError?.message || lastError}`);
 }
