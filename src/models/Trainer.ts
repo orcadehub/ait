@@ -6,6 +6,7 @@ export interface ITrainer extends Document {
   phone: string;
   isVerified: boolean;
   profileComplete: boolean;
+  isBlocked: boolean;
   passwordHash?: string;
   experience?: number;
   education?: string;

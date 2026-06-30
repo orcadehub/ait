@@ -15,6 +15,7 @@ export interface IVendor extends Document {
   whatsapp?: string;
   altEmail?: string;
   profileComplete: boolean;
+  isBlocked: boolean;
   createdAt: Date;
 }
 
